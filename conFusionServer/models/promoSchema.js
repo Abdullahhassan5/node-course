@@ -1,27 +1,11 @@
 const mongoose =require('mongoose');
+const express =require('express');
+
 const schema = mongoose.Schema;
 require('mongoose-currency').loadType(mongoose);
 const Currency = mongoose.Types.Currency;
-var commentSchema = new schema({
-    rating:  {
-        type: Number,
-        min: 1,
-        max: 5,
-        required: true
-    },
-    comment:  {
-        type: String,
-        required: true
-    },
-    author:  {
-        type: String,
-        required: true
-    }
-}, {
-    timestamps: true
-});
 
-const dishSchema = new schema({
+const promoSchema = new schema({
     name: {
         type: String,
         required: true,
@@ -48,9 +32,10 @@ const dishSchema = new schema({
         type: Boolean,
         default:false      
     },
+
 }, {
     timestamps: true
 });
-var Dishes = mongoose.model('Dish', dishSchema);
+var Promos = mongoose.model('promo', promoSchema);
 
-module.exports = Dishes;
+module.exports = Promos;

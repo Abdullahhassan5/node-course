@@ -6,6 +6,7 @@ var logger = require('morgan');
 
 const mongoose =require('mongoose');
 const dishes = require('./models/dishes')
+const promo = require('./models/promoSchema')
 
 const url = 'mongodb://localhost:27017/conFusion'; 
 
