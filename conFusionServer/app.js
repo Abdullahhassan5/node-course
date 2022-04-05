@@ -4,6 +4,18 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const mongoose =require('mongoose');
+const dishes = require('./models/dishes')
+
+const url = 'mongodb://localhost:27017/conFusion'; 
+
+const connect = mongoose.connect(url);
+
+connect.then((db)=>{
+  console.log("connected seucessfully");
+},(err)=>{console.log(err);});
+
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var dishrouter = require('./routes/dishrouter');
@@ -11,14 +23,7 @@ var promoRouter = require('./routes/promoRouter');
 var leaderRouter = require('./routes/leaderRouter');
 var app = express();
 
-app.use('/dishes', dishrouter);
-app.use('/promo', promoRouter);
-app.use('/leader', leaderRouter);
 
-
-
-
-var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
