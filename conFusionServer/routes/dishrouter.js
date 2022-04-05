@@ -19,7 +19,7 @@ dishrouter.get('/',(req, res,next)=>{
 // get by id
 dishrouter.get('/:id',(req,res,next) => {
 
-    console.log('we are in get by id ' , dish);
+    //console.log('we are in get by id ' , dish);
     Dishes.findById(req.params.id)
     .then((dish) => {
         res.statusCode = 200;
@@ -44,7 +44,7 @@ dishrouter.post('/',(req, res, next) => {
 // update the id
 dishrouter.put('/:id',(req,res)=>{
     //res.end('we Will update dish id : ' + req.body.name + ' with details: ' + req.body.description);
-    Dishes.findByIdAndUpdate(req.params.dishId, {
+    Dishes.findByIdAndUpdate(req.params.id, {
         $set: req.body
     }, { new: true })
     .then((dish) => {
@@ -69,8 +69,8 @@ dishrouter.delete('/',(req,res, next)=>{
         .catch((err) => next(err));
 });
 
-dishrouter.delete((req, res, next) => {
-    Dishes.findByIdAndRemove(req.params.dishId)
+dishrouter.delete('/:id',(req, res, next) => {
+    Dishes.findByIdAndRemove(req.params.id)
     .then((resp) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
