@@ -35,12 +35,29 @@ leaderRouter.post('/',(req, res, next) => {
     .catch((err) => next(err));
 });
     // update the id
-leaderRouter.put('/:id',(req,res)=>{
-        res.end('we Will update leader id : ' + req.body.name + ' with details: ' + req.body.description);
+    leaderRouter.put('/:id',(req,res)=>{
+        //res.end('we Will update dish id : ' + req.body.name + ' with details: ' + req.body.description);
+        Leader.findByIdAndUpdate(req.params.id, {
+            $set: req.body
+        }, { new: true })
+        .then((leader) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(leader);
+        }, (err) => next(err))
+        .catch((err) => next(err));
     })
-    // delete the id
-leaderRouter.delete('/:id',(req,res)=>{
-        res.end('we will delete this by id : ' + req.body.name + ' with details: ' + req.body.description);
+
+
+    // delete by id
+    leaderRouter.delete('/:id',(req, res, next) => {
+        Leader.findByIdAndRemove(req.params.id)
+        .then((resp) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(resp);
+        }, (err) => next(err))
+        .catch((err) => next(err));
     });
 
 module.exports = leaderRouter;
