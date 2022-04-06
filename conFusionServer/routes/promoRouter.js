@@ -3,6 +3,7 @@ const promoRouter = express.Router();
 const Promos = require('../models/promoSchema')
 const mongoose =require('mongoose');
 
+//promo get all  
 console.log("we are in promotion router")
     promoRouter.get('/', (req,res,next)=>{
         Promos.find({})
@@ -16,12 +17,19 @@ console.log("we are in promotion router")
 
 
 
-// get by id
-promoRouter.get('/:id',(req, res)=>{
-    res.end("we will send  promos to according to id ")
-    
-    });
-    // create new id
+// promo get by id
+promoRouter.get('/:id',(req,res,next) => {
+
+    //console.log('we are in get by id ' , dish);
+    Promos.findById(req.params.id)
+    .then((promo) => {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(promo);
+    }, (err) => next(err))
+    .catch((err) => next(err));
+});
+    // create new id by post
 promoRouter.post('/',(req, res, next) => {
     Promos.create(req.body)
     .then((promo)=>{
@@ -31,12 +39,29 @@ promoRouter.post('/',(req, res, next) => {
        }, (err) => next(err))
        .catch((err) => next(err));
 });
-    // update the id
-promoRouter.put('/:id',(req,res)=>{
-        res.end('we Will update promo id : ' + req.body.name + ' with details: ' + req.body.description);
+    // update the id by put
+    promoRouter.put('/:id',(req,res)=>{
+        //res.end('we Will update dish id : ' + req.body.name + ' with details: ' + req.body.description);
+        Promos.findByIdAndUpdate(req.params.id, {
+            $set: req.body
+        }, { new: true })
+        .then((promo) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(promo);
+        }, (err) => next(err))
+        .catch((err) => next(err));
     })
-    // delete the id
-promoRouter.delete('/:id',(req,res)=>{
-        res.end('we will delete this by id : ' + req.body.name + ' with details: ' + req.body.description);
+
+
+    // delete by id
+promoRouter.delete('/:id',(req, res, next) => {
+        Promos.findByIdAndRemove(req.params.id)
+        .then((resp) => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(resp);
+        }, (err) => next(err))
+        .catch((err) => next(err));
     });
     module.exports=promoRouter;
