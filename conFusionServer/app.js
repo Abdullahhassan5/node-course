@@ -5,13 +5,13 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var passport = require('passport');
 var authenticate = require('./authenticate');
-
+var config = require('./config');
 
 const mongoose =require('mongoose');
 const dishes = require('./models/dishes')
 const promo = require('./models/promoSchema')
 
-const url = 'mongodb://localhost:27017/conFusion'; 
+const url = config.mongoUrl; 
 
 const connect = mongoose.connect(url);
 
@@ -29,7 +29,7 @@ var leaderRouter = require('./routes/leaderRouter');
 var app = express();
 
 app.use(passport.initialize());
-app.use(passport.session());
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -39,13 +39,13 @@ app.set('view engine', 'jade');
 //app.use(cookieParser('12345-67890-09876-54321'));
 
 
-app.use(session({
-  name: 'session-id',
-  secret: '12345-67890-09876-54321',
-  saveUninitialized: false,
-  resave: false,
-  store: new FileStore()
-}));
+// app.use(session({
+//   name: 'session-id',
+//   secret: '12345-67890-09876-54321',
+//   saveUninitialized: false,
+//   resave: false,
+//   store: new FileStore()
+// }));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -72,19 +72,7 @@ app.use('/users', usersRouter);
 // }
 //passport authentication
 
-function auth (req, res, next) {
-  console.log(req.user);
 
-  if (!req.user) {
-    var err = new Error('You are not authenticated!');
-    err.status = 403;
-    next(err);
-  }
-  else {
-        next();
-  }
-}
-app.use(auth);
 // ends here basic authentication
 
 

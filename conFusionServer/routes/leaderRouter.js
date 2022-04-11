@@ -1,6 +1,7 @@
 const express = require('express');
 const leaderRouter = express.Router();
 const Leader = require('../models/leader')
+const authenticate = require('../authenticate')
 console.log("we are in leader router folder")
 
 leaderRouter.get('/', (req,res,next)=>{
@@ -25,7 +26,7 @@ leaderRouter.get('/:id',(req,res,next) => {
     .catch((err) => next(err));
 });
     // create new id by post
-leaderRouter.post('/',(req, res, next) => {
+leaderRouter.post('/',authenticate.verifyUser,(req, res, next) => {
     Leader.create(req.body)
     .then((leader)=>{
     res.statusCode = 200;
@@ -35,7 +36,7 @@ leaderRouter.post('/',(req, res, next) => {
     .catch((err) => next(err));
 });
     // update the id
-    leaderRouter.put('/:id',(req,res)=>{
+    leaderRouter.put('/:id',authenticate.verifyUser,(req,res)=>{
         //res.end('we Will update dish id : ' + req.body.name + ' with details: ' + req.body.description);
         Leader.findByIdAndUpdate(req.params.id, {
             $set: req.body
@@ -50,7 +51,7 @@ leaderRouter.post('/',(req, res, next) => {
 
 
     // delete by id
-    leaderRouter.delete('/:id',(req, res, next) => {
+    leaderRouter.delete('/:id',authenticate.verifyUser,(req, res, next) => {
         Leader.findByIdAndRemove(req.params.id)
         .then((resp) => {
             res.statusCode = 200;

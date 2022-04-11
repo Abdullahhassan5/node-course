@@ -2,6 +2,7 @@ const express =require('express');
 const dishrouter = express.Router();
 const mongoose =require('mongoose');
 const Dishes = require('../models/dishes')
+var authenticate = require('../authenticate');
 console.log("we are in router folder")
 
 
@@ -28,9 +29,9 @@ dishrouter.get('/:id',(req,res,next) => {
         console.log('we are in post ' , dish);
     }, (err) => next(err))
     .catch((err) => next(err));
-});
-// create new id
-dishrouter.post('/',(req, res, next) => {
+})
+// create new id /// add the passport token authentication
+dishrouter.post('/',authenticate.verifyUser,(req, res, next) => {
     //res.end('Will add the dish: ' + req.body.name + ' with details: ' + req.body.description);
     Dishes.create(req.body)
      .then((dish)=>{
@@ -41,8 +42,8 @@ dishrouter.post('/',(req, res, next) => {
         }, (err) => next(err))
         .catch((err) => next(err));
 });
-// update the id
-dishrouter.put('/:id',(req,res)=>{
+// update the id // authenticate.verifyUser,add instead of
+dishrouter.put('/:id',authenticate.verifyUser,(req,res)=>{
     //res.end('we Will update dish id : ' + req.body.name + ' with details: ' + req.body.description);
     Dishes.findByIdAndUpdate(req.params.id, {
         $set: req.body
@@ -58,18 +59,18 @@ dishrouter.put('/:id',(req,res)=>{
 
 
 // delete the id
-dishrouter.delete('/',(req,res, next)=>{
-   // res.end('we will delete this by id    : ' + req.body.name + ' with details: ' + req.body.description);
-    Dishes.remove({})
-    .then((resp)=>{
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(resp);
-        }, (err) => next(err))
-        .catch((err) => next(err));
-});
+// dishrouter.delete(authenticate.verifyUser,(req,res, next)=>{
+//    // res.end('we will delete this by id    : ' + req.body.name + ' with details: ' + req.body.description);
+//     Dishes.remove({})
+//     .then((resp)=>{
+//         res.statusCode = 200;
+//         res.setHeader('Content-Type', 'application/json');
+//         res.json(resp);
+//         }, (err) => next(err))
+//         .catch((err) => next(err));
+// });
 
-dishrouter.delete('/:id',(req, res, next) => {
+dishrouter.delete('/:id',authenticate.verifyUser,(req, res, next) => {
     Dishes.findByIdAndRemove(req.params.id)
     .then((resp) => {
         res.statusCode = 200;
